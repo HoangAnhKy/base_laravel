@@ -22,14 +22,15 @@
                 </div>
                 <div class="col-3">
                     <select class="form-select" name="status_search" id="status_search">
-                        <option value="-1">ALL STATUS</option>
                         @foreach( LIST_STATUS as $k_status => $v_status)
                             <option value="{{$k_status}}"
-                                    @if(isset($_GET["status_search"]) && (int)$_GET["status_search"] === $k_status) selected @endif>{{ $v_status }}</option>
+                                @if(isset($_GET["status_search"]) && (int)$_GET["status_search"] === $k_status) selected
+                                @elseif( !isset($_GET["status_search"]) && $k_status === ACTIVE) selected @endif
+                            >{{ $v_status }}</option>
                         @endforeach
                     </select></div>
                 <div class="col-4">
-                    <input class="form-control" name="key_search" id="search" placeholder="search name or email">
+                    <input class="form-control" name="key_search" id="search" placeholder="search name or email"  value="{{ old("key_search", $_GET['key_search'] ?? "") }}">
                 </div>
                 <button class="btn btn-success col-1"><i class="fa-solid fa-magnifying-glass"></i></button>
             </form>
@@ -60,8 +61,10 @@
                         <td>{{ LIST_POSITION[$user->position ?? 0] }}</td>
                         <td>{{ LIST_STATUS[$user->status ?? 0] }}</td>
                         <td>
-                            <a href=" {{route("users.edit", ["user" => $user->id])}}" class="text-primary"><i class="fa-solid fa-pen-to-square"></i></a>
-                            <a href=" {{route("users.delete", ["user" => $user->id])}}" class="text-danger mx-2"><i class="fa-regular fa-trash-can"></i></a>
+                            <a href=" {{route("users.edit", ["user" => $user->id])}}" class="text-primary"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
+                            <a href=" {{route("users.delete", ["user" => $user->id])}}" class="text-danger mx-2"><i
+                                    class="fa-regular fa-trash-can"></i></a>
                         </td>
                     </tr>
                 @endforeach
@@ -74,7 +77,7 @@
 @push("js")
     <script>
         $(document).ready(function () {
-            function handleSearchForm(){
+            function handleSearchForm() {
                 $("#form-search-user").submit();
             }
 

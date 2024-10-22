@@ -22,6 +22,14 @@ class Table extends Model
         }
 
         if (!empty($list_filter)) {
+            if (!empty($list_filter["CONTAIN"])){
+                foreach ($list_filter['CONTAIN'] as $relation => $conditions) {
+                    $query->whereHas($relation, function ($q) use ($conditions) {
+                        $q->where(...$conditions);
+                    });
+                }
+                unset($list_filter["CONTAIN"]);
+            }
             $query->where($list_filter);
         }
 
@@ -56,6 +64,22 @@ class Table extends Model
         }
 
         return $query->first();
+    }
+
+    public static function selectALL($condition = [], $contain = [], $select = ["*"])
+    {
+
+        $query = self::query()->with($contain)->select($select);
+
+        if (!empty($condition_table = static::$condition)) {
+            $query->where($condition_table);
+        }
+
+        if (!empty($condition)) {
+            $query->where($condition);
+        }
+
+        return $query->get();
     }
 
     public static function saveDB($data_request = [])

@@ -26,16 +26,6 @@
             <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" value="{{ old("email", $user_edit->email ?? "" ) }}">
         </div>
 
-        <!-- Position -->
-        <div class="mb-3">
-            <label for="position" class="form-label">Position</label>
-            <select class="form-select" id="position" name="position" >
-                <option value="" disabled selected>Select Position</option>
-                @foreach( LIST_POSITION as $k_position => $v_position)
-                    <option value="{{$k_position}}" @if( (int)old('position', $user_edit->position ?? "") === $k_position) selected @endif>{{ $v_position }}</option>
-                @endforeach
-            </select>
-        </div>
 
         <!-- Submit Button -->
         <button type="submit" class="btn btn-primary form-control">Submit</button>

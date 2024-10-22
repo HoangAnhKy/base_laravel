@@ -9,7 +9,7 @@ class Users extends Table
     use HasFactory;
 
     public $fillable = ["name_user", "birthdate", "email", "password", "position"];
-    public static $condition = ["users.del_flag" => UNDEL, "users.status" => ACTIVE];
+    public static $condition = ["users.del_flag" => UNDEL];
 
 
     public function getformatBirthdateAttribute()

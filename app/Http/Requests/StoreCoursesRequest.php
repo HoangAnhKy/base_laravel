@@ -2,7 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Courses;
+use App\Models\Users;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreCoursesRequest extends FormRequest
 {
@@ -11,7 +14,7 @@ class StoreCoursesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +25,13 @@ class StoreCoursesRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            "name_course" => ["bail", "required", "string", Rule::unique(Courses::class, "name_course")],
+            "teacher_id" => ["bail", "required",
+                Rule::exists(Users::class, "id")->where(function ($query) {
+                    $query->where('status', ACTIVE)
+                        ->where('position', TEACHER);
+                })
+            ],
         ];
     }
 }

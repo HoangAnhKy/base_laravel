@@ -10,7 +10,7 @@ class UserLibrary
     public function getFilter()
     {
         $filter = [];
-
+        $filter["status"] = ACTIVE;
         if (isset($_GET["position_search"]) && in_array((int)$_GET["position_search"], array_keys(LIST_POSITION), true)) {
             $filter["position"] = $_GET["position_search"];
         }
@@ -55,5 +55,14 @@ class UserLibrary
         }
 
         return false;
+    }
+
+    public function selectTeacher(){
+        $condition = [
+            ["position", TEACHER],
+            ["status", ACTIVE]
+        ];
+        $select = ["id", "name_user"];
+        return Users::selectALL($condition, [], $select);
     }
 }

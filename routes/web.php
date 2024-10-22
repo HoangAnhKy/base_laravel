@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CoursesController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Support\Facades\Route;
 
@@ -13,6 +14,13 @@ Route::group(["prefix" => "/"], function (){
     Route::get("/delete/{user}", [UsersController::class, "delete"])->name("users.delete");
 });
 
+Route::group(["prefix" => "/course"], function (){
+    Route::get("/", [CoursesController::class, "index"])->name("courses.index");
+    Route::get("/create", [CoursesController::class, "create"])->name("courses.create");
+    Route::post("/save", [CoursesController::class, "store"])->name("courses.store");
+});
+
 Route::fallback(function (){
    return view("Layout.404");
 });
+

@@ -17,7 +17,10 @@ class UsersFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'name_user' => $this->faker->name(),
+            'birthdate' => $this->faker->dateTimeBetween('-22 years', '-18 years'),
+            'email' => $this->faker->email(),
+            'position' => $this->faker->randomElement([TEACHER, STUDENT]),
         ];
     }
 }

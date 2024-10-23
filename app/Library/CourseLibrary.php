@@ -2,6 +2,7 @@
 
 namespace App\Library;
 
+use App\Models\Courses;
 use App\Models\Users;
 use Illuminate\Validation\Rule;
 
@@ -29,6 +30,30 @@ class CourseLibrary
             ];
         }
         return $search;
+    }
+
+    public function delete($request, $course = null){
+        if (isset($course) && is_numeric($course)) {
+
+            $request->merge([
+                "course_id" => $course,
+                "del_flag" => DEL,
+                "status" => INACTIVE
+            ]);
+
+            $validate = $request->validate([
+                "course_id" => [Rule::exists(Courses::class, "id")],
+                "del_flag" => [Rule::in([DEL])],
+                "status" => [Rule::in([INACTIVE])],
+            ]);
+
+            unset($validate["course_id"]);
+
+            if (Courses::updateDB(["id" => $course], $validate)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }

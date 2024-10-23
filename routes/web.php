@@ -18,6 +18,9 @@ Route::group(["prefix" => "/course"], function (){
     Route::get("/", [CoursesController::class, "index"])->name("courses.index");
     Route::get("/create", [CoursesController::class, "create"])->name("courses.create");
     Route::post("/save", [CoursesController::class, "store"])->name("courses.store");
+    Route::get("/edit/{course}", [CoursesController::class, "edit"])->name("courses.edit");
+    Route::put("/update/{course}", [CoursesController::class, "update"])->name("courses.update");
+    Route::get("/delete/{course}", [CoursesController::class, "delete"])->name("courses.delete");
 });
 
 Route::fallback(function (){

@@ -53,6 +53,12 @@
                         <td>{{ $course->name_course }}</td>
                         <td>{{ $course->teacher->name_user }}</td>
                         <td>{{ LIST_STATUS[$course->status ?? ACTIVE] }}</td>
+                        <td>
+                            <a href=" {{route("courses.edit", ["course" => $course->id])}}" class="text-primary"><i
+                                    class="fa-solid fa-pen-to-square"></i></a>
+                            <a href=" {{route("courses.delete", ["course" => $course->id])}}" class="text-danger mx-2"><i
+                                    class="fa-regular fa-trash-can"></i></a>
+                        </td>
                     </tr>
                 @endforeach
             @endif

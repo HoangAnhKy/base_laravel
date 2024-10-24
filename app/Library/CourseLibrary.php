@@ -2,6 +2,7 @@
 
 namespace App\Library;
 
+use App\Models\CourseDetail;
 use App\Models\Courses;
 use App\Models\Users;
 use Illuminate\Validation\Rule;
@@ -54,6 +55,23 @@ class CourseLibrary
             }
         }
         return false;
+    }
+
+    public function checkStudentInCourse($request){
+        $status = false;
+        if ($request->ajax()){
+            $student_id = $request->get("student_id");
+            $course_id = $request->get("course_id");
+
+            $course_detail = CourseDetail::selectOne(
+                [
+                    ["student_id", $student_id],
+                    ["course_id", $course_id]
+                ]);
+
+            $status = empty($course_detail);
+        }
+        return response()->json($status);
     }
 
 }

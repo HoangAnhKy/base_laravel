@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCourseDetailRequest;
 use App\Library\CourseLibrary;
 use App\Library\UserLibrary;
+use App\Models\CourseDetail;
 use App\Models\Courses;
 use App\Http\Requests\StoreCoursesRequest;
 use App\Http\Requests\UpdateCoursesRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class CoursesController extends Controller
@@ -29,15 +32,16 @@ class CoursesController extends Controller
         $condition = [];
         $contain = ["teacher"];
 
-        $teachers = $this->lib_user->selectTeacher();
+        $teachers = $this->lib_user->selectPosition();
+        $students = $this->lib_user->selectPosition(STUDENT);
 
         $courses = Courses::paginateForPage($condition, $list_filter, $list_search, $contain);
-        return view("Course.index", compact("courses", "teachers"));
+        return view("Course.index", compact("courses", "teachers", "students"));
     }
 
     public function create()
     {
-        $teachers = $this->lib_user->selectTeacher();
+        $teachers = $this->lib_user->selectPosition();
         return view("Course.create", compact("teachers"));
     }
 
@@ -51,9 +55,8 @@ class CoursesController extends Controller
 
     public function edit($course = null)
     {
-
         if (isset($course) && is_numeric($course)) {
-            $teachers = $this->lib_user->selectTeacher();
+            $teachers = $this->lib_user->selectPosition();
             $course = Courses::selectOne([["id", $course]]);
             return view("Course.edit", compact("teachers", "course"));
         }
@@ -72,6 +75,29 @@ class CoursesController extends Controller
     {
         if ($this->lib_course->delete($request, $course)) {
             return redirect()->route("courses.index")->with("success", "Delete Course success");
+        }
+        return redirect()->route("courses.index")->with("error", "Cannot find Course");
+    }
+
+
+    public function register($course = null, StoreCourseDetailRequest $request){
+        if (isset($course) && is_numeric($course) && CourseDetail::saveDB($request->validated())) {
+            return redirect()->route("courses.index")->with("success", "Register Course success");
+        }
+        return redirect()->route("courses.index")->with("error", "Cannot find Course");
+    }
+
+    public function checkStudentInCourse(Request $request){
+        return $this->lib_course->checkStudentInCourse($request);
+    }
+
+    public function viewDetail($course = null){
+        if (isset($course) && is_numeric($course)) {
+            $condition = [["id", $course]];
+            $contain = ["teacher", "student"];
+            $course_detail = Courses::selectOne($condition, $contain);
+            $student = $course_detail->student()->paginate(LIMIT);
+            return view("Course.viewDetail", compact("course_detail", "student"));
         }
         return redirect()->route("courses.index")->with("error", "Cannot find Course");
     }

@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 
-class Users extends Table
+class Users extends Table implements AuthenticatableContract
 {
     use HasFactory;
+    use Authenticatable;
 
     public $fillable = ["name_user", "birthdate", "email", "password", "position"];
     public static $condition = ["users.del_flag" => UNDEL];

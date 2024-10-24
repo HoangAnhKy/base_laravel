@@ -11,4 +11,15 @@ class Courses extends Table
     public function teacher(){
         return $this->hasOne(Users::class,"id","teacher_id");
     }
+
+    public function student(){
+        return $this->hasManyThrough(
+            Users::class,
+            CourseDetail::class,
+            "course_id",
+            "id",
+            "id",
+            "student_id"
+        );
+    }
 }

@@ -1,4 +1,4 @@
-@extends("Layout.default")
+@extends("Layout.viewall")
 @section("content")
     <body class="d-flex align-items-center justify-content-center vh-100 bg-light">
 

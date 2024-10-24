@@ -57,9 +57,9 @@ class UserLibrary
         return false;
     }
 
-    public function selectTeacher(){
+    public function selectPosition($position = TEACHER){
         $condition = [
-            ["position", TEACHER],
+            ["position", $position],
             ["status", ACTIVE]
         ];
         $select = ["id", "name_user"];

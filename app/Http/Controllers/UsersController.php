@@ -7,6 +7,7 @@ use App\Models\Users;
 use App\Http\Requests\StoreUsersRequest;
 use App\Http\Requests\UpdateUsersRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -66,4 +67,26 @@ class UsersController extends Controller
         }
         return redirect()->route("users.index")->with("error", "Cannot find this user");
     }
+
+    public function login(){
+        return view("User.login");
+    }
+
+    public function logout(){
+        \auth()->logout();
+        return redirect("/");
+    }
+
+    public function handleLogin(Request $request){
+        if ($request->getMethod() === POST && Auth::attempt($request->except("_token"))){
+            if (Auth::user()->position === TEACHER) {
+                return redirect()->route('users.index')->with("success", "login success");
+            }
+
+            if (Auth::user()->position === STUDENT) {
+                return redirect()->route('courses.index')->with("success", "login success");
+            }
+        }
+    }
+
 }
